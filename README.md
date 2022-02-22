@@ -22,7 +22,7 @@ Then, start server command:
 ```shell
 salesforce-exporter start-server
 ```
-Go to http://localhost:3000/metrics to view the metrics. The default port is `3000`, to change the port using `--port` option.
+Go to http://localhost:3000/metrics to view the metrics. The default port is `3000`, to change the port use `--port` option.
 
 ```shell
 salesforce-exporter start-server --port <PORT>
