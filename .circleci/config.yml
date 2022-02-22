@@ -26,7 +26,6 @@ workflows:
   build-and-release:
     jobs:
       - version
-      - python/test
       - build:
           requires:
             - version
