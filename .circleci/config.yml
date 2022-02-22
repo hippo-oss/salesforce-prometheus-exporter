@@ -6,7 +6,6 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/dist
       - run:
           name: Checking Python & PIP version.
           command: |
