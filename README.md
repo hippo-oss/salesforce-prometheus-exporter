@@ -1,1 +1,1 @@
-# salesforce-prometheus-exporter
+# Salesforce Prometheus Exporter
