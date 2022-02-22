@@ -1,18 +1,32 @@
 version: '2.1'
 orbs:
   python: circleci/python@2.0.1
+
+defaults: &defaults
+  executor: python/default
+  working_directory: ~/project
+
 jobs:
   version:
-    executor: python/default
+    <<: *defaults
     steps:
-      - checkout
       - run:
           name: Checking Python & PIP version.
           command: |
             python --version
             pip --version
 
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - python/dist
+
 workflows:
-  main:
+  build-and-release:
     jobs:
       - version
+      - python/test
+      - build:
+          requires:
+            - version
