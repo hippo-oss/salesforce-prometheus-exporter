@@ -1,31 +1,36 @@
 version: '2.1'
-orbs:
-  python: circleci/python@2.0.1
+
+BASE_IMAGE: &BASE_IMAGE docker:17.05.0-ce-git
 
 defaults: &defaults
-  executor: python/default
   working_directory: ~/project
+  docker:
+    - image: *BASE_IMAGE
 
 jobs:
-  version:
-    <<: *defaults
-    steps:
-      - run:
-          name: Checking Python & PIP version.
-          command: |
-            python --version
-            pip --version
-
   build:
     <<: *defaults
     steps:
       - checkout
-      - python/dist
+      - run:
+          name: Building Docker Image.
+          command: |
+            docker build -t salesforce-prometheus-exporter .
+
+  release:
+    <<: *defaults
+    steps:
+      - run:
+          command: |
+            echo "Publish"
+            ls -l
+            pwd
+            docker images
 
 workflows:
   build-and-release:
     jobs:
-      - version
-      - build:
+      - build
+      - release:
           requires:
-            - version
+            - build
