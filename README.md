@@ -4,11 +4,12 @@ This repo fetches logs from Salesforce & creates a custom exporter, which can be
 
 ### Getting Started
 
+To Build the docker:
 ```shell
-pip install salesforce-prometheus-exporter
+docker build -t salesforce-prometheus-exporter .
 ```
 
-Set the following environment variables.
+Create a file with following environment variables.  For e.g. `/tmp/env.list` 
 ```shell
 SF_URL=<salesforce url>
 SF_VERSION=<salesforce version>
@@ -21,12 +22,13 @@ ENVIRONMENT=<dev|qa|production> # default is set to `local`.
 Then, start server command:
 
 ```shell
-salesforce-exporter start-server
+docker run -p 3000:3000 --env-file /tmp/env.list salesforce-prometheus-exporter:latest
 ```
-Go to http://localhost:3000/metrics to view the metrics. The default port is `3000`, to change the port use `--port` option.
+Go to http://localhost:3000/metrics to view the metrics.
 
-```shell
-salesforce-exporter start-server --port <PORT>
-```
+### Available Routes:
+<b>Home:</b> http://localhost:3000/ <br />
+<b>Health:</b> http://localhost:3000/health <br />
+<b>Metrics:</b> http://localhost:3000/metrics <br />
 
 NOTE: The metrics will start with the prefix `sfdc`
