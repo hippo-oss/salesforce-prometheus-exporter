@@ -16,6 +16,7 @@ CONSUMER_ID=<salesforce consumer/client ID>
 CONSUMER_SECRET=<salesforce consumer/client secret>
 AUTH_USERNAME=<salesforce username>
 AUTH_PASSWORD=<salesforce password>
+ENVIRONMENT=<dev|qa|production> # default is set to `local`.
 ```
 Then, start server command:
 
