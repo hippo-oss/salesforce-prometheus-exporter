@@ -14,20 +14,7 @@ jobs:
           command: |
             docker build -t salesforce-prometheus-exporter .
 
-  release:
-    <<: *defaults
-    steps:
-      - run:
-          command: |
-            echo "Publish"
-            ls -l
-            pwd
-            docker images
-
 workflows:
   build-and-release:
     jobs:
       - build
-      - release:
-          requires:
-            - build
