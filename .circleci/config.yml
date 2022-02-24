@@ -1,11 +1,8 @@
 version: '2.1'
 
-BASE_IMAGE: &BASE_IMAGE docker:17.05.0-ce-git
-
 defaults: &defaults
   working_directory: ~/project
-  docker:
-    - image: *BASE_IMAGE
+  machine: true
 
 jobs:
   build:
