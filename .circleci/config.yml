@@ -4,17 +4,53 @@ defaults: &defaults
   working_directory: ~/project
   machine: true
 
+whitelist: &whitelist
+  paths: .
+
 jobs:
-  build:
+  checkout:
     <<: *defaults
     steps:
       - checkout
+      - persist_to_workspace:
+          root: ~/project
+          <<: *whitelist
+
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
       - run:
           name: Building Docker Image.
           command: |
             docker build -t salesforce-prometheus-exporter .
 
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Listing Docker Image(s).
+          command: |
+            docker images
+
 workflows:
+  version: 2
   build-and-release:
     jobs:
-      - build
+      - checkout:
+          name: checkout
+      - build:
+          name: build
+          requires:
+            - checkout
+      - release:
+          name: release
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
