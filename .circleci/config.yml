@@ -1,31 +1,56 @@
 version: '2.1'
-orbs:
-  python: circleci/python@2.0.1
 
 defaults: &defaults
-  executor: python/default
   working_directory: ~/project
+  machine: true
+
+whitelist: &whitelist
+  paths: .
 
 jobs:
-  version:
+  checkout:
     <<: *defaults
     steps:
-      - run:
-          name: Checking Python & PIP version.
-          command: |
-            python --version
-            pip --version
+      - checkout
+      - persist_to_workspace:
+          root: ~/project
+          <<: *whitelist
 
   build:
     <<: *defaults
     steps:
-      - checkout
-      - python/dist
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Building Docker Image.
+          command: |
+            docker build -t salesforce-prometheus-exporter .
+
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Listing Docker Image(s).
+          command: |
+            docker images
 
 workflows:
+  version: 2
   build-and-release:
     jobs:
-      - version
+      - checkout:
+          name: checkout
       - build:
+          name: build
           requires:
-            - version
+            - checkout
+      - release:
+          name: release
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
